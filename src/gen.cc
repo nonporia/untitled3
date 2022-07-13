@@ -4,47 +4,73 @@
  * **/
 #include "gen.hh"
 
-namespace gen_utils
+namespace gen_prgm
 {
+    /**
+     * sfile     : Assembly file.
+     * sections  : Basically all main function and the posibles loops.
+     * cuSection : Current section.
+     * cuIdxMem  : It decreases (<) or increases (>) into the memories.
+     * rbp_r     : Current value of rbp register.
+     * **/
     FILE* sfile;
-    std::vector<SECTION> sections;
+    std::vector<SECTION> sections { sct_makemainsec() };
     std::size_t cuSection = 0;
+    unsigned int cuIdxMem = 0;
+    unsigned int rbp_r = 4;
 }
 
-void gen_makefile (char *filename)
+namespace gen_asm
 {
-    gen_utils::sfile = fopen("sfile.s", "w");
-    fprintf(gen_utils::sfile, "# %s has been compiled\n", filename);
-    fprintf(gen_utils::sfile, ".text\n");
-    fprintf(gen_utils::sfile, ".globl main\n");
-    fprintf(gen_utils::sfile, ".type main, @function\n");
-    fprintf(gen_utils::sfile, ".type main, @function\n");
-    fprintf(gen_utils::sfile, "main:\n");
-    fprintf(gen_utils::sfile, "\tpushq %%rbp\n");
-    fprintf(gen_utils::sfile, "\tmovq %%rsp, %%rbp\n");
-    fprintf(gen_utils::sfile, "\tcall SEC0\n");
-    fprintf(gen_utils::sfile, "\tleave\n");
-    fprintf(gen_utils::sfile, "\tret\n");
-
-    gen_utils::sections.push_back(sct_makesection());
-}
-
-void gen_witecode ()
-{
-    for ( SECTION sec : gen_utils::sections ) {
-        fprintf(gen_utils::sfile, sec.temp.c_str(), sec.body.c_str());
+    void newmem ()
+    {
+        gen_prgm::sections.at(0).body += "\tsubq    $4, %rsp\n";
+        gen_prgm::sections.at(0).body += "\tmovl    $0, -" + std::to_string(gen_prgm::rbp_r) + "(%rbp)\n";
+        gen_prgm::rbp_r += 4;
+        gen_prgm::cuIdxMem += 4;
     }
-    fclose(gen_utils::sfile);
+    void inCuMem (std::string *body)
+    {
+        (*body) += "\tincl    -" + std::to_string(gen_prgm::cuIdxMem) + "(%rbp)\n";
+    }
+    void deCuMem (std::string *body)
+    {
+        (*body) += "\tdecl    -" + std::to_string(gen_prgm::cuIdxMem) + "(%rbp)\n";
+    }
+    void ptCuMem (std::string *body)
+    {
+        (*body) += "\tmovl    -" + std::to_string(gen_prgm::cuIdxMem) + "(%rbp), %edi\n"
+                   "\tcall    putchar@PLT\n"
+                   "\tmovl    $0, %eax\n";
+    }
+}
+
+void gen_start ()
+{
+    gen_prgm::sections.push_back( sct_makesection() );
+    gen_prgm::cuSection++;
+    gen_getinstr('>');
+}
+
+void gen_writecode ()
+{
+    gen_prgm::sfile = fopen("sfile.s", "w");
+    for ( SECTION sec : gen_prgm::sections ) {
+        fprintf(gen_prgm::sfile, sec.temp.c_str(), sec.body.c_str());
+    }
+    fclose(gen_prgm::sfile);
 }
 
 void gen_getinstr (const char &instr)
 {
-    if ( instr == '>' ) { printf("INC PTR.\n"); }
+    std::string* cuBody = &gen_prgm::sections.at( gen_prgm::cuSection ).body;
+    if ( instr == '+' ) { gen_asm::inCuMem(cuBody); }
+    if ( instr == '-' ) { gen_asm::deCuMem(cuBody); }
+    if ( instr == '.' ) { gen_asm::ptCuMem(cuBody); }
+    if ( instr == '>' ) { gen_asm::newmem(); }
+
     if ( instr == '<' ) { printf("DEC PTR.\n"); }
-    if ( instr == '.' ) { printf("PRINT.\n"); }
     if ( instr == ',' ) { printf("INPUT.\n"); }
-    if ( instr == '+' ) { printf("INC VALUE.\n"); }
-    if ( instr == '-' ) { printf("DEC VALUE.\n"); }
     if ( instr == '[' ) { printf("INIT LOOP.\n"); }
     if ( instr == ']' ) { printf("END LOOP.\n"); }
 }

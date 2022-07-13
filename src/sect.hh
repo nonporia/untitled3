@@ -14,5 +14,6 @@ struct SECTION
 };
 
 SECTION sct_makesection ();
+SECTION sct_makemainsec ();
 
 #endif

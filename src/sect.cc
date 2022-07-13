@@ -16,3 +16,20 @@ SECTION sct_makesection ()
     nsections++;
     return thsSec;
 }
+
+SECTION sct_makemainsec ()
+{
+    SECTION mainSec;
+    mainSec.temp = ".text\n"
+                   ".globl main\n"
+                   ".type main, @function\n"
+                   "main:\n"
+                   "\tpushq   %rbp\n"
+                   "\tmovq    %rsp, %rbp\n"
+                   "%s"
+                   "\tcall SEC0\n"
+                   "\tleave\n"
+                   "\tret\n";
+    mainSec.body = "";
+    return mainSec;
+}

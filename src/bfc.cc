@@ -4,12 +4,14 @@
  * **/
 #include "gen.hh"
 
-void read (FILE* bFile)
+void read (FILE* bFile, char* fName)
 {
+    gen_start();
     char instr;
     while ( (instr = fgetc(bFile)) != EOF ) {
         gen_getinstr(instr);
     }
+    gen_writecode();
 }
 
 int main (int argc, char* argv[])
@@ -25,7 +27,7 @@ int main (int argc, char* argv[])
         return 1;
     }
 
-    read(bFile);
+    read(bFile, argv[1]);
     fclose(bFile);
     return 0;
 }

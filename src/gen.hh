@@ -8,8 +8,8 @@
 #include <iostream>
 #include <vector>
 
-void gen_makefile (char *filename);
-void gen_witecode ();
+void gen_start ();
+void gen_writecode ();
 void gen_getinstr (const char &instr);
 
 #endif
