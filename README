@@ -7,4 +7,4 @@ A compiler to Brain Fuck programming language written in C++.
     ~ GNU Assembly (https://en.wikipedia.org/wiki/GNU_Assembler)
 
 [==== Quik TODO ====]
-    ~ Do not write a lot of 'incl' and 'decl' mnemonics.
+    ~ Don't write a lot of 'incl' and 'decl' mnemonics.
