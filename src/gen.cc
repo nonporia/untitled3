@@ -24,6 +24,14 @@ namespace gen_asm
 {
     void newmem ()
     {
+        /**
+         * To not make unnecessary assembly variables (Memories in Bf).
+         * **/
+        if ( gen_prgm::cuIdxMem + 4 != gen_prgm::rbp_r ) {
+            gen_prgm::cuIdxMem += 4;
+            return;
+        }
+
         gen_prgm::sections.at(0).body += "\tsubq    $4, %rsp\n";
         gen_prgm::sections.at(0).body += "\tmovl    $0, -" + std::to_string(gen_prgm::rbp_r) + "(%rbp)\n";
         gen_prgm::rbp_r += 4;
@@ -68,8 +76,10 @@ void gen_getinstr (const char &instr)
     if ( instr == '-' ) { gen_asm::deCuMem(cuBody); }
     if ( instr == '.' ) { gen_asm::ptCuMem(cuBody); }
     if ( instr == '>' ) { gen_asm::newmem(); }
+    if ( instr == '<' ) {
+        if ( gen_prgm::cuIdxMem >= 8 ) { gen_prgm::cuIdxMem -= 4; }
+    }
 
-    if ( instr == '<' ) { printf("DEC PTR.\n"); }
     if ( instr == ',' ) { printf("INPUT.\n"); }
     if ( instr == '[' ) { printf("INIT LOOP.\n"); }
     if ( instr == ']' ) { printf("END LOOP.\n"); }
