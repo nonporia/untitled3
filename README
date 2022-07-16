@@ -5,6 +5,3 @@ A compiler to Brain Fuck programming language written in C++.
 [==== REFERENCES ====]
     ~ Brain Fuck (https://www.youtube.com/watch?v=UhxKtXnQWfM&t)
     ~ GNU Assembly (https://en.wikipedia.org/wiki/GNU_Assembler)
-
-[==== Quik TODO ====]
-    ~ Don't write a lot of 'incl' and 'decl' mnemonics.

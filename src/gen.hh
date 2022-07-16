@@ -9,7 +9,7 @@
 #include <vector>
 
 void gen_start ();
-void gen_writecode ();
 void gen_getinstr (const char &instr);
+void gen_writecode ();
 
 #endif

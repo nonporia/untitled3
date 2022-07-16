@@ -1,7 +1,7 @@
 c:
 	g++ *.cc
-	./a.out ../bf-code/just-print.bf
-	cc sfile.s
+	./a.out ../bf-code/input.bf
+	cc outf.s
 	./a.out
 	@echo ""
 	rm a.out
