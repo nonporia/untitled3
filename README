@@ -1,8 +1,12 @@
 BrainFuck Compiler
 ==================
-A very simple compiler to Brain Fuck programming language written in C++.
-There are some concepts that i don't know but basically you can print anything and make any number
-of memories in Brain Fuck code and everything will be translated to GNU Assembly.
+A simple Brain Fuck compiler written in C++.
+You can try it with the examples, or make your own code and compile it!
+    ~ g++ *.cc
+    ~ ./a.out path-to-file
+    ~ cc outf.s
+    ~ ./a.out
+Or just modify the Makefile :D
 
 [==== REFERENCES ====]
     ~ Brain Fuck (https://www.youtube.com/watch?v=UhxKtXnQWfM&t)
