@@ -5,16 +5,6 @@
 #include "sect.hh"
 unsigned nsections = 0;
 
-
-//idxloop = 4
-//
-//main:
-// ...
-//SEC0:
-// ...
-//
-
-
 SECTION sct_makesection ()
 {
     SECTION thsSec;
